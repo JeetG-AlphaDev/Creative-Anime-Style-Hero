@@ -681,8 +681,13 @@ a {
     0 0 0 1px rgba(255, 30, 60, 0.18),
     0 0 34px rgba(255, 30, 60, 0.22);
   clip-path: polygon(0 0, 66% 0, 78% 13%, 100% 13%, 100% 100%, 0 100%);
-  transform: perspective(900px) rotateX(var(--card-tilt-y, 0deg)) rotateY(var(--card-tilt-x, 0deg));
+  transform:
+    perspective(980px)
+    rotateX(var(--card-tilt-y, 0deg))
+    rotateY(var(--card-tilt-x, 0deg))
+    scale(var(--card-scale, 1));
   transform-origin: center;
+  transform-style: preserve-3d;
   transition:
     transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 220ms ease;
@@ -691,6 +696,7 @@ a {
 }
 
 .info-card:hover {
+  --card-scale: 1.035;
   box-shadow:
     0 0 0 1px rgba(255, 30, 60, 0.3),
     0 18px 55px rgba(0, 0, 0, 0.22),
@@ -703,6 +709,7 @@ a {
   z-index: 0;
   opacity: 0.29;
   pointer-events: none;
+  transform: translateZ(8px);
   background-color: #000;
   background-image:
     radial-gradient(circle at 2px 2px, rgba(255, 255, 255, 0.2) 1px, transparent 1.8px),
@@ -729,8 +736,10 @@ a {
   z-index: 2;
   opacity: 0;
   pointer-events: none;
-  background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.3) 47%, transparent 62%);
-  transform: translateX(-58%) rotate(8deg);
+  background:
+    radial-gradient(circle at var(--card-glare-x, 50%) var(--card-glare-y, 50%), rgba(255, 255, 255, 0.24), transparent 28%),
+    linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.24) 47%, transparent 62%);
+  transform: translateX(-58%) rotate(8deg) translateZ(28px);
   transition: opacity 180ms ease;
 }
 
@@ -752,6 +761,19 @@ a {
   border-radius: 50%;
   box-shadow: 0 0 18px rgba(255, 30, 60, 0.35);
   z-index: 5;
+  transform: translateZ(24px);
+  transform-style: preserve-3d;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 260ms ease;
+  will-change: transform;
+}
+
+.info-card:hover .info-card__orb {
+  transform: translateZ(86px) translateY(-3px) scale(1.06);
+  box-shadow:
+    0 0 22px rgba(255, 30, 60, 0.52),
+    0 18px 28px rgba(0, 0, 0, 0.24);
 }
 
 .info-card svg {
@@ -767,6 +789,14 @@ a {
 .info-card__copy {
   position: relative;
   z-index: 5;
+  transform: translateZ(34px);
+  transform-style: preserve-3d;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.info-card:hover .info-card__copy {
+  transform: translateZ(76px) translateY(-4px);
 }
 
 .info-card h2 {
@@ -775,6 +805,18 @@ a {
   line-height: 0.82;
   font-weight: 700;
   letter-spacing: 0.02em;
+  transform: translateZ(18px);
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    text-shadow 280ms ease;
+  will-change: transform;
+}
+
+.info-card:hover h2 {
+  transform: translateZ(118px);
+  text-shadow:
+    0 12px 22px rgba(0, 0, 0, 0.38),
+    0 0 18px rgba(255, 30, 60, 0.18);
 }
 
 .info-card p {
@@ -783,6 +825,16 @@ a {
   font-size: clamp(0.92rem, 1.05vw, 1.16rem);
   font-weight: 700;
   line-height: 1.55;
+  transform: translateZ(10px);
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    text-shadow 280ms ease;
+  will-change: transform;
+}
+
+.info-card:hover p {
+  transform: translateZ(74px);
+  text-shadow: 0 10px 18px rgba(0, 0, 0, 0.32);
 }
 
 .info-card__button {
@@ -804,6 +856,22 @@ a {
   line-height: 1;
   text-transform: uppercase;
   box-shadow: inset 0 0 20px rgba(255, 30, 60, 0.1);
+  transform: translateZ(30px);
+  transform-style: preserve-3d;
+  transition:
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 280ms ease,
+    border-color 280ms ease;
+  will-change: transform;
+}
+
+.info-card:hover .info-card__button {
+  transform: translateZ(104px) translateY(-3px);
+  border-color: rgba(255, 64, 89, 0.95);
+  box-shadow:
+    inset 0 0 22px rgba(255, 30, 60, 0.16),
+    0 18px 30px rgba(0, 0, 0, 0.26),
+    0 0 22px rgba(255, 30, 60, 0.24);
 }
 
 @keyframes card-shine {

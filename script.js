@@ -205,15 +205,21 @@ function initInfoCardTilt() {
   const reset = () => {
     card.style.setProperty("--card-tilt-x", "0deg");
     card.style.setProperty("--card-tilt-y", "0deg");
+    card.style.setProperty("--card-glare-x", "50%");
+    card.style.setProperty("--card-glare-y", "50%");
   };
 
   card.addEventListener("pointermove", (event) => {
     const rect = card.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
+    const glareX = ((event.clientX - rect.left) / rect.width) * 100;
+    const glareY = ((event.clientY - rect.top) / rect.height) * 100;
 
-    card.style.setProperty("--card-tilt-x", `${(x * 7).toFixed(2)}deg`);
-    card.style.setProperty("--card-tilt-y", `${(-y * 6).toFixed(2)}deg`);
+    card.style.setProperty("--card-tilt-x", `${(x * 15).toFixed(2)}deg`);
+    card.style.setProperty("--card-tilt-y", `${(-y * 12).toFixed(2)}deg`);
+    card.style.setProperty("--card-glare-x", `${glareX.toFixed(1)}%`);
+    card.style.setProperty("--card-glare-y", `${glareY.toFixed(1)}%`);
   });
 
   card.addEventListener("pointerleave", reset);
