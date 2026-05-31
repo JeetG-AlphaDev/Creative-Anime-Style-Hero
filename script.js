@@ -558,67 +558,212 @@ function initCharacterMaskReveal() {
 }
 
 function initStackedCinematicScroll() {
+  const transition = document.querySelector(".landing-transition");
   const stack = document.querySelector(".landing-stack");
+  const hero = document.querySelector(".landing-stack .hero");
   const nextSection = document.querySelector(".cinematic-video");
   const media = document.querySelector(".cinematic-video__media");
-  const iframe = document.querySelector(".cinematic-video iframe");
+  const video = document.querySelector(".cinematic-video__asset");
+  const mangaSection = document.querySelector(".manga-story");
+  const mangaStage = document.querySelector(".manga-story__stage");
+  const mangaFrames = Array.from(document.querySelectorAll(".manga-story__frame"));
+  const mangaCopies = Array.from(document.querySelectorAll(".manga-story__copy"));
 
-  if (!stack || !nextSection || !media || !window.gsap || !window.ScrollTrigger) return;
+  if (!transition || !stack || !hero || !nextSection || !media || !window.gsap || !window.ScrollTrigger) return;
 
   gsap.registerPlugin(ScrollTrigger);
 
-  gsap.set(nextSection, { yPercent: 100 });
+  const storyStepCount = Math.max(mangaFrames.length - 1, 1);
+  const timelineUnits = mangaFrames.length ? 3.25 + storyStepCount * 2.15 : 1;
+  const getTotalScroll = () => Math.round(window.innerHeight * timelineUnits);
+
+  const syncSceneHeight = () => {
+    const sceneHeight = Math.max(hero.offsetHeight, window.innerHeight);
+    transition.style.setProperty("--scene-height", `${sceneHeight}px`);
+    transition.style.setProperty("--transition-scroll", `${getTotalScroll()}px`);
+  };
+
+  syncSceneHeight();
+
+  gsap.set(nextSection, { yPercent: 100, autoAlpha: 1 });
   gsap.set(media, {
-    opacity: 0,
+    autoAlpha: 1,
     scale: 0.72,
-    clipPath: "inset(18% 24% round 26px)",
+    width: "min(76vw, 1180px)",
+    height: "auto",
+    borderRadius: 0,
+    clipPath: "inset(18% 24% round 0px)",
   });
 
-  const sectionTransition = gsap.timeline({
+  if (mangaSection && mangaFrames.length) {
+    gsap.set(mangaSection, { yPercent: 100, autoAlpha: 1 });
+    if (mangaStage) {
+      gsap.set(mangaStage, {
+        y: 0,
+        height: "calc(100% - 5vw)",
+      });
+    }
+    mangaFrames.forEach((frame, index) => {
+      gsap.set(frame, {
+        zIndex: index + 1,
+        autoAlpha: 1,
+        scale: index === 0 ? 1 : 1.012,
+        clipPath: index === 0 ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
+      });
+      const image = frame.querySelector("img");
+      if (image) gsap.set(image, { scale: index === 0 ? 1.008 : 1.018 });
+    });
+    mangaCopies.forEach((copy, index) => {
+      gsap.set(copy, {
+        autoAlpha: index === 0 ? 1 : 0,
+        y: 0,
+      });
+    });
+  }
+
+  const playVideo = () => {
+    if (!video) return;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.play().catch(() => {});
+  };
+
+  const master = gsap.timeline({
+    defaults: { ease: "none" },
     scrollTrigger: {
       trigger: stack,
-      start: "top top",
-      end: "+=100%",
-      pin: true,
+      start: "bottom bottom",
+      end: () => `+=${getTotalScroll()}`,
+      pin: stack,
+      pinSpacing: false,
       scrub: 1,
       anticipatePin: 1,
       invalidateOnRefresh: true,
+      onRefreshInit: syncSceneHeight,
+      onEnter: playVideo,
+      onEnterBack: playVideo,
+      onUpdate: (self) => {
+        if (video && self.progress > 0.04) playVideo();
+      },
+      onLeaveBack: () => {
+        if (!video) return;
+        video.pause();
+        video.currentTime = 0;
+      },
     },
   });
 
-  sectionTransition.to(nextSection, {
-    yPercent: 0,
-    ease: "none",
-  });
-
-  const mediaReveal = gsap.timeline({
-    scrollTrigger: {
-      trigger: stack,
-      start: "top top",
-      end: "+=100%",
-      scrub: 1,
-      invalidateOnRefresh: true,
-    },
-  });
-
-  mediaReveal
-    .to(media, {
-      opacity: 1,
-      duration: 0.18,
-      ease: "none",
-    }, 0.42)
+  master
+    // Section overlap: the dark scene moves upward over the pinned hero.
+    .to(nextSection, {
+      yPercent: 0,
+      duration: 1,
+    }, 0)
+    // Media reveal: the video block expands from a smaller cinematic frame.
     .to(media, {
       scale: 1,
       clipPath: "inset(0% 0% round 0px)",
       borderRadius: 0,
       width: "100vw",
-      height: "100svh",
-      ease: "none",
-      duration: 0.58,
-    }, 0.42);
+      height: "100%",
+      duration: 0.62,
+    }, 0.38);
 
-  // Pinterest controls playback inside the embed, so this is intentionally manual-play.
-  if (iframe) {
-    iframe.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+  if (mangaSection && mangaFrames.length) {
+    const storyStart = 2.32;
+
+    const firstImage = mangaFrames[0].querySelector("img");
+
+    master
+      // Manga section overlap: the storytelling section rises over the video scene.
+      .to(mangaSection, {
+        yPercent: 0,
+        duration: 1,
+      }, 1.02);
+
+    if (mangaStage) {
+      master.to(mangaStage, {
+        y: "-5vw",
+        height: "100%",
+        duration: 0.52,
+      }, 1.9);
+    }
+
+    if (firstImage) {
+      master.to(firstImage, {
+        scale: 1,
+        duration: 0.7,
+      }, 1.82);
+    }
+
+    let cursor = storyStart;
+
+    for (let index = 0; index < mangaFrames.length - 1; index += 1) {
+      const currentCopy = mangaCopies[index];
+      const nextFrame = mangaFrames[index + 1];
+      const nextCopy = mangaCopies[index + 1];
+      const nextImage = nextFrame.querySelector("img");
+
+      if (currentCopy) {
+        master.to(currentCopy, {
+          y: "-72vh",
+          duration: 1.05,
+        }, cursor);
+      }
+
+      master.to(nextFrame, {
+        clipPath: "inset(0% 0 0 0)",
+        scale: 1,
+        duration: 0.92,
+      }, cursor + 0.92);
+
+      if (nextImage) {
+        master.to(nextImage, {
+          scale: 1,
+          duration: 0.92,
+        }, cursor + 0.92);
+      }
+
+      if (nextCopy) {
+        master.set(nextCopy, {
+          autoAlpha: 1,
+          y: 0,
+        }, cursor + 1.84);
+      }
+
+      cursor += 2.15;
+    }
+
+    const finalCopy = mangaCopies[mangaCopies.length - 1];
+    if (finalCopy) {
+      master.to(finalCopy, {
+        y: "-56vh",
+        duration: 0.9,
+      }, cursor + 0.18);
+    }
   }
+
+  if (video) {
+    video.addEventListener("loadedmetadata", () => {
+      playVideo();
+      ScrollTrigger.refresh();
+    }, { once: true });
+  }
+
+  mangaFrames.forEach((frame) => {
+    const image = frame.querySelector("img");
+    if (image) {
+      image.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    syncSceneHeight();
+    ScrollTrigger.refresh();
+  });
+  window.addEventListener("load", () => {
+    syncSceneHeight();
+    ScrollTrigger.refresh();
+  }, { once: true });
 }

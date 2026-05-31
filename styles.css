@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Teko:wght@300..700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap");
+
 @font-face {
   font-family: "Druk Wide";
   src: url("hero big text font/DrukWideBold.ttf") format("truetype");
@@ -14,8 +16,8 @@
   --deep-red: #b3001b;
   --line: rgba(10, 10, 10, 0.15);
   --line-red: rgba(255, 30, 60, 0.68);
-  --teko: "Arial Narrow", "Bahnschrift Condensed", "Impact", sans-serif;
-  --jp: "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
+  --teko: "Teko", "Arial Narrow", "Bahnschrift Condensed", "Impact", sans-serif;
+  --jp: "Zen Kaku Gothic New", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
 }
 
 * {
@@ -1010,23 +1012,32 @@ a {
   font-size: 0.88rem;
 }
 
-.landing-stack {
+.landing-transition {
+  --scene-height: 100svh;
+  --transition-scroll: 100svh;
   position: relative;
-  height: 100svh;
-  overflow: hidden;
+  height: calc(var(--scene-height) + var(--transition-scroll));
   background: #030303;
 }
 
-.landing-stack .hero,
-.cinematic-video {
+.landing-stack {
+  position: relative;
+  height: var(--scene-height);
+  overflow: hidden;
+  background: var(--paper);
+}
+
+.cinematic-video,
+.manga-story {
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 100svh;
-  min-height: 100svh;
+  height: 100%;
+  min-height: var(--scene-height);
 }
 
 .landing-stack .hero {
+  position: relative;
   z-index: 1;
 }
 
@@ -1053,15 +1064,16 @@ a {
   top: 50%;
   width: min(76vw, 1180px);
   aspect-ratio: 16 / 9;
+  height: auto;
   overflow: hidden;
   background: #000000;
   border: 1px solid rgba(255, 30, 60, 0.22);
-  border-radius: 26px;
-  clip-path: inset(18% 24% round 26px);
+  border-radius: 0;
+  clip-path: inset(18% 24% round 0px);
   box-shadow:
     0 28px 86px rgba(0, 0, 0, 0.62),
     0 0 62px rgba(255, 30, 60, 0.18);
-  opacity: 0;
+  opacity: 1;
   transform: translate(-50%, -50%) scale(0.72);
   transform-origin: center;
   will-change: transform, clip-path, opacity, border-radius;
@@ -1078,16 +1090,136 @@ a {
     radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.34));
 }
 
-.cinematic-video iframe {
+.cinematic-video__asset {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 42%;
-  height: 100%;
+  width: 100vh;
+  width: 100svh;
+  height: 100vw;
   border: 0;
   background: #000000;
-  transform: translate(-50%, -50%) scale(2.55);
+  object-fit: cover;
+  object-position: center;
+  transform: translate(-50%, -50%) rotate(270deg);
   transform-origin: center;
+}
+
+.manga-story {
+  z-index: 8;
+  overflow: hidden;
+  color: #ffffff;
+  background:
+    linear-gradient(135deg, #8f0015 0%, #ff1a39 46%, #700010 100%);
+  border-radius: 42px 42px 0 0;
+  isolation: isolate;
+  will-change: transform;
+}
+
+.manga-story::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 18%, transparent 82%, rgba(0, 0, 0, 0.22));
+}
+
+.manga-story__stage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 5vw;
+  height: calc(100% - 5vw);
+  overflow: hidden;
+  background: #050505;
+  border-radius: 34px 34px 0 0;
+  will-change: transform, height;
+}
+
+.manga-story__frame {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #030303;
+  clip-path: inset(0 0 0 100%);
+  transform-origin: center;
+  will-change: clip-path, transform, opacity;
+}
+
+.manga-story__frame--active {
+  clip-path: inset(0% 0 0 0);
+}
+
+.manga-story__frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  image-rendering: auto;
+  transform: scale(1.015);
+  transform-origin: center;
+}
+
+.manga-story__frame:nth-child(3) img {
+  object-position: 100% 0%;
+  transform: scale(1);
+}
+
+.manga-story__shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.26), transparent 38%, transparent 76%, rgba(0, 0, 0, 0.16));
+}
+
+.manga-story__copy {
+  position: absolute;
+  left: auto;
+  right: clamp(24px, 7vw, 124px);
+  top: 50%;
+  z-index: 3;
+  width: min(420px, calc(100vw - 48px));
+  text-align: left;
+  transform: translateY(-50%);
+  will-change: transform, opacity;
+}
+
+.manga-story__copy span {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #ff1a39;
+  font-family: "Inter", Arial, sans-serif;
+  font-size: clamp(0.58rem, 0.72vw, 0.72rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.manga-story__copy h2 {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--jp);
+  font-size: clamp(1.52rem, 2.75vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.manga-story__copy p {
+  width: min(560px, 100%);
+  margin: 16px 0 0;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: "Inter", Arial, sans-serif;
+  font-size: clamp(0.88rem, 1.12vw, 1.1rem);
+  font-weight: 700;
+  line-height: 1.5;
 }
 
 .devil-tuner {
@@ -1313,6 +1445,36 @@ a {
 }
 
 @media (max-width: 760px) {
+  .manga-story__stage {
+    top: 5vw;
+    height: calc(100% - 5vw);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .manga-story__copy {
+    left: auto;
+    right: 22px;
+    top: 50%;
+    width: min(330px, calc(100vw - 44px));
+  }
+
+  .manga-story__copy span {
+    margin-bottom: 9px;
+    font-size: 0.54rem;
+    letter-spacing: 0.13em;
+  }
+
+  .manga-story__copy h2 {
+    font-size: clamp(1.35rem, 8vw, 2.55rem);
+    line-height: 1.04;
+  }
+
+  .manga-story__copy p {
+    margin-top: 12px;
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
   .hero {
     min-height: 760px;
   }
