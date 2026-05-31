@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Teko:wght@300..700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap");
-
 @font-face {
   font-family: "Druk Wide";
   src: url("hero big text font/DrukWideBold.ttf") format("truetype");
@@ -16,8 +14,8 @@
   --deep-red: #b3001b;
   --line: rgba(10, 10, 10, 0.15);
   --line-red: rgba(255, 30, 60, 0.68);
-  --teko: "Teko", "Arial Narrow", "Bahnschrift Condensed", "Impact", sans-serif;
-  --jp: "Zen Kaku Gothic New", "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
+  --teko: "Arial Narrow", "Bahnschrift Condensed", "Impact", sans-serif;
+  --jp: "Yu Gothic", "Meiryo", "Noto Sans JP", sans-serif;
 }
 
 * {
@@ -1179,11 +1177,10 @@ a {
 
 .manga-story__copy {
   position: absolute;
-  left: auto;
-  right: clamp(24px, 7vw, 124px);
-  top: 50%;
+  left: clamp(24px, 5.6vw, 92px);
+  top: 38%;
   z-index: 3;
-  width: min(420px, calc(100vw - 48px));
+  width: min(690px, calc(100vw - 48px));
   text-align: left;
   transform: translateY(-50%);
   will-change: transform, opacity;
@@ -1204,10 +1201,10 @@ a {
 .manga-story__copy h2 {
   margin: 0;
   color: #ffffff;
-  font-family: var(--jp);
-  font-size: clamp(1.52rem, 2.75vw, 3.2rem);
+  font-family: "Yu Gothic", "Yu Gothic UI", "Meiryo", "Hiragino Kaku Gothic ProN", "Noto Sans JP", var(--teko), sans-serif;
+  font-size: clamp(1.65rem, 3.25vw, 3.75rem);
   font-weight: 900;
-  line-height: 1.02;
+  line-height: 0.96;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -1452,10 +1449,9 @@ a {
   }
 
   .manga-story__copy {
-    left: auto;
-    right: 22px;
-    top: 50%;
-    width: min(330px, calc(100vw - 44px));
+    left: 24px;
+    top: 40%;
+    width: min(360px, calc(100vw - 48px));
   }
 
   .manga-story__copy span {
@@ -1465,8 +1461,8 @@ a {
   }
 
   .manga-story__copy h2 {
-    font-size: clamp(1.35rem, 8vw, 2.55rem);
-    line-height: 1.04;
+    font-size: clamp(1.5rem, 9vw, 2.85rem);
+    line-height: 0.98;
   }
 
   .manga-story__copy p {

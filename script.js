@@ -574,7 +574,7 @@ function initStackedCinematicScroll() {
   gsap.registerPlugin(ScrollTrigger);
 
   const storyStepCount = Math.max(mangaFrames.length - 1, 1);
-  const timelineUnits = mangaFrames.length ? 3.25 + storyStepCount * 2.15 : 1;
+  const timelineUnits = mangaFrames.length ? 3.45 + storyStepCount * 1.62 : 1;
   const getTotalScroll = () => Math.round(window.innerHeight * timelineUnits);
 
   const syncSceneHeight = () => {
@@ -615,8 +615,8 @@ function initStackedCinematicScroll() {
     });
     mangaCopies.forEach((copy, index) => {
       gsap.set(copy, {
-        autoAlpha: index === 0 ? 1 : 0,
-        y: 0,
+        autoAlpha: 1,
+        y: index === 0 ? 0 : "64vh",
       });
     });
   }
@@ -715,25 +715,25 @@ function initStackedCinematicScroll() {
       master.to(nextFrame, {
         clipPath: "inset(0% 0 0 0)",
         scale: 1,
-        duration: 0.92,
-      }, cursor + 0.92);
+        duration: 0.98,
+      }, cursor + 0.62);
 
       if (nextImage) {
         master.to(nextImage, {
           scale: 1,
-          duration: 0.92,
-        }, cursor + 0.92);
+          duration: 0.98,
+        }, cursor + 0.62);
       }
 
-      if (nextCopy) {
-        master.set(nextCopy, {
-          autoAlpha: 1,
-          y: 0,
-        }, cursor + 1.84);
-      }
-
-      cursor += 2.15;
+    if (nextCopy) {
+      master.to(nextCopy, {
+        y: 0,
+        duration: 0.98,
+      }, cursor + 0.62);
     }
+
+    cursor += 1.62;
+  }
 
     const finalCopy = mangaCopies[mangaCopies.length - 1];
     if (finalCopy) {
