@@ -1010,6 +1010,86 @@ a {
   font-size: 0.88rem;
 }
 
+.landing-stack {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: #030303;
+}
+
+.landing-stack .hero,
+.cinematic-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+}
+
+.landing-stack .hero {
+  z-index: 1;
+}
+
+.cinematic-video {
+  z-index: 5;
+  overflow: hidden;
+  background: #030303;
+  will-change: transform;
+}
+
+.cinematic-video__backdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255, 30, 60, 0.13), transparent 44%),
+    #030303;
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+.cinematic-video__media {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(76vw, 1180px);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: #000000;
+  border: 1px solid rgba(255, 30, 60, 0.22);
+  border-radius: 26px;
+  clip-path: inset(18% 24% round 26px);
+  box-shadow:
+    0 28px 86px rgba(0, 0, 0, 0.62),
+    0 0 62px rgba(255, 30, 60, 0.18);
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.72);
+  transform-origin: center;
+  will-change: transform, clip-path, opacity, border-radius;
+}
+
+.cinematic-video__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 16%),
+    radial-gradient(circle at 50% 50%, transparent 55%, rgba(0, 0, 0, 0.34));
+}
+
+.cinematic-video iframe {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 42%;
+  height: 100%;
+  border: 0;
+  background: #000000;
+  transform: translate(-50%, -50%) scale(2.55);
+  transform-origin: center;
+}
+
 .devil-tuner {
   position: fixed;
   top: 92px;

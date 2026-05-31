@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <div class="landing-stack">
     <main class="hero" aria-label="Neonverse anime hero">
       <div class="hero__grain" aria-hidden="true"></div>
       <div class="hero__scanline hero__scanline--left" aria-hidden="true"></div>
@@ -119,6 +120,22 @@
         </div>
       </section>
     </main>
+    <section class="cinematic-video" aria-label="Asta cinematic reveal">
+      <div class="cinematic-video__backdrop" aria-hidden="true"></div>
+      <div class="cinematic-video__media">
+        <iframe
+          src="https://assets.pinterest.com/ext/embed.html?id=1011128553820130615"
+          title="Asta cinematic video"
+          height="714"
+          width="345"
+          frameborder="0"
+          scrolling="no"
+          allow="fullscreen; encrypted-media"
+          loading="lazy"
+        ></iframe>
+      </div>
+    </section>
+    </div>
     <aside class="devil-tuner" aria-label="Temporary Devil Union image controls">
       <div class="devil-tuner__head">
         <strong>Devil Image Controls</strong>
@@ -146,6 +163,7 @@
       </div>
     </aside>
     <script src="vendor/gsap.min.js"></script>
+    <script src="vendor/ScrollTrigger.min.js"></script>
     <script src="vendor/three.min.js"></script>
     <script src="script.js"></script>
   </body>

@@ -55,6 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
   initInfoCardTilt();
   initDevilTuner();
   initCharacterMaskReveal();
+  initStackedCinematicScroll();
 });
 
 function initDecorativeLoops() {
@@ -554,4 +555,70 @@ function initCharacterMaskReveal() {
   stack.addEventListener("pointerleave", hidePointer);
   window.addEventListener("resize", resize);
   window.addEventListener("devilControls:update", resize);
+}
+
+function initStackedCinematicScroll() {
+  const stack = document.querySelector(".landing-stack");
+  const nextSection = document.querySelector(".cinematic-video");
+  const media = document.querySelector(".cinematic-video__media");
+  const iframe = document.querySelector(".cinematic-video iframe");
+
+  if (!stack || !nextSection || !media || !window.gsap || !window.ScrollTrigger) return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.set(nextSection, { yPercent: 100 });
+  gsap.set(media, {
+    opacity: 0,
+    scale: 0.72,
+    clipPath: "inset(18% 24% round 26px)",
+  });
+
+  const sectionTransition = gsap.timeline({
+    scrollTrigger: {
+      trigger: stack,
+      start: "top top",
+      end: "+=100%",
+      pin: true,
+      scrub: 1,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  sectionTransition.to(nextSection, {
+    yPercent: 0,
+    ease: "none",
+  });
+
+  const mediaReveal = gsap.timeline({
+    scrollTrigger: {
+      trigger: stack,
+      start: "top top",
+      end: "+=100%",
+      scrub: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+
+  mediaReveal
+    .to(media, {
+      opacity: 1,
+      duration: 0.18,
+      ease: "none",
+    }, 0.42)
+    .to(media, {
+      scale: 1,
+      clipPath: "inset(0% 0% round 0px)",
+      borderRadius: 0,
+      width: "100vw",
+      height: "100svh",
+      ease: "none",
+      duration: 0.58,
+    }, 0.42);
+
+  // Pinterest controls playback inside the embed, so this is intentionally manual-play.
+  if (iframe) {
+    iframe.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
+  }
 }
